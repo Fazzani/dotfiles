@@ -1,0 +1,54 @@
+# Exclude those directories even if not listed in .gitignore, or if .gitignore is missing
+FD_OPTIONS="--follow --exclude .git --exclude node_modules --exclude .vscode"
+
+# Change behavior of fzf dialogue
+export FZF_DEFAULT_OPTS="--ansi --no-mouse --height 50% -1 --reverse --multi --inline-info --preview 'bat --color=always --style=header,grid --line-range :300 {}' --bind='f3:execute(bat --style=numbers {} || less -f {}),f2:toggle-preview,ctrl-d:half-page-down,ctrl-u:half-page-up,ctrl-a:select-all+accept,ctrl-y:execute-silent(echo {+} | pbcopy)'"
+# Change find backend
+# Use 'git ls-files' when inside GIT repo, or fd otherwise
+export FZF_DEFAULT_COMMAND="git ls-files --cached --others --exclude-standard | fd --type f --type l $FD_OPTIONS"
+
+# Find commands for "Ctrl+T" and "Opt+C" shortcuts
+export FZF_CTRL_T_COMMAND="fd $FD_OPTIONS"
+export FZF_ALT_C_COMMAND="fd --type d $FD_OPTIONS"
+alias fzp='fzf --preview "bat --style=numbers --color=always {} | head -500"'
+
+#======================================================================================
+#                                       Kubernetes
+#======================================================================================
+
+function __k8s_is_namespaced(){
+    # is K8S namespaced resource
+    kubectl api-resources --no-headers --verbs=get | awk -v x="$1" '{ if (($1 == x) || ($2 == x)) print $(NF-1);}' | grep -iw true 2>&1 > /dev/null
+    return
+}
+
+function kfz() {
+    local r=$1
+    echo -e "ctrl-e: to edit resource $r"
+    if __k8s_is_namespaced "$r"; then
+        echo "namespaced"
+        kubectl get $r -A --no-headers | fzf --height 50% -1 --reverse --inline-info --preview "kubectl describe $r/{+2} -n {+1} | bat --theme=OneHalfDark -l yaml --style=numbers --color=always" --bind="ctrl-e:execute(kubectl edit $r/{+2} $*)+accept"
+    else
+        echo "not namespaced"
+        kubectl get $r --no-headers | fzf --height 50% -1 --reverse --inline-info --preview "kubectl describe $r/{+1} | bat --theme=OneHalfDark -l yaml --style=numbers --color=always" --bind="ctrl-e:execute(kubectl edit $r/{+1} $*)+accept"
+    fi
+}
+
+alias kfzr='kubectl api-resources | fzf'
+# switch k8s namespace
+alias kfznss='echo -e "ctrl-s: to switch namespace";kubectl get ns --no-headers | fzf --height 50% -1 --reverse --inline-info --preview "kubectl get po -n {+1}" --bind="ctrl-s:execute(kubectl config set-context --current --namespace={+1})+accept"'
+
+# # read dynamicaly k8s ressources and store them into array
+#     while IFS= read -r line; do
+#         K_SUB_CMD+=( "$line" )
+#     done < <(kubectl api-resources --no-headers --verbs=get | awk '{if($2 ~ /io|true$/) print $1; else print $2}' | awk -F ',' '{print $1}')
+
+
+# _kfz_completions()
+# {
+#     COMPREPLY=($(compgen -W "${K_SUB_CMD[*]}" -- "${COMP_WORDS[1]}"))
+# }
+
+# complete -F _kfz_completions kfz
+
+# complete -F __start_kubectl kfz
