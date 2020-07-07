@@ -1,11 +1,16 @@
+export GPG_TTY=$(tty)
+gpgconf --launch gpg-agent
+
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:/home/ansible/miniconda3/bin:$PATH
+export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$ZSH/custom/plugins/zsh-syntax-highlighting/highlighters
 
 # Path to your oh-my-zsh installation.
 export LC_ALL=en_US.UTF-8
 export LSCOLORS=""
 export GPG_TTY=$(tty)
 export ZSH=$HOME/.oh-my-zsh
+export ZSH_DISABLE_COMPFIX=true
 
 ZSH_THEME=powerlevel10k/powerlevel10k
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
@@ -28,16 +33,21 @@ plugins=(
   pip
   history
   python
-  zsh-autosuggestions
-  zsh-syntax-highlighting
   history-substring-search
   fzf
   conda-zsh-completion
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
+
+function install_linux {
+  command -v diff-so-fancy &>/dev/null || npm i -g diff-so-fancy;
+  dpkg -s fonts-firacode &>/dev/null || sudo apt install fonts-firacode;
+}
 
 case "$OSTYPE" in
   darwin*)  plugins+=(brew osx) ;;
-  linux*)   echo "not yet" ;;
+  linux*)    install_linux ;;
   *)        echo "not supprted os: $OSTYPE" ;;
 esac
 
@@ -62,7 +72,22 @@ esac
 [ -f "$HOME/.tmux/tmux.completion.bash" ] && source "$HOME/.tmux/tmux.completion.bash"
 [ -f "$HOME/.minikube-completion" ] && source "$HOME/.minikube-completion"
 
-
 neofetch
 
 # Autoload -U compinit && compinit
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/ansible/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/ansible/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/ansible/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/ansible/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
