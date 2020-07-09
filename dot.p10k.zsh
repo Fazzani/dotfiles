@@ -38,7 +38,7 @@ fi
       dir                     # current directory
       vcs                     # git status
       # =========================[ Line #2 ]=========================
-      newline
+      # newline
       # prompt_char           # prompt symbol
   )
 
@@ -70,8 +70,9 @@ fi
       # ram                   # free RAM
       load                  # CPU load
       battery               # internal battery
+      wifi
       # =========================[ Line #2 ]=========================
-      newline
+      # newline
       time                  # current time
       # public_ip             # public IP address
       # proxy                 # system-wide http/https/ftp proxy
@@ -168,7 +169,8 @@ fi
   fi
 
   # Default background color.
-  typeset -g POWERLEVEL9K_BACKGROUND=236
+  typeset -g POWERLEVEL9K_BACKGROUND=whitespace
+  typeset -g POWERLEVEL9K_KUBECONTEXT_SHOW_ON_COMMAND='kubectl|helm|kubens|kubectx|oc|istioctl|kogito'
 
   # Separator between same-color segments on the left.
   typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='%244F|'

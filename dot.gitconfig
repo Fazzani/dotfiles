@@ -110,7 +110,7 @@
 
 [user]
  name = Fazzani
- email = fazzani.heni@outlook.fr
- signingkey = EE0683EEB5E44F581281C014AE6E1AFD298CBE96
+ email = heni.fazzani@gmail.com
+ signingkey = AC585ABAD4C152C36E719FBD962DF7B7A818B62D
 [gpg]
 	program = gpg

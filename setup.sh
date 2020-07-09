@@ -35,7 +35,21 @@ function os_linux_install(){
     sudo apt-get update -y && \
     sudo apt-get upgrade -y
 
-    linux_packages=("${COMMON_PACKAGES[@]}" libffi-dev libssl-dev python python-pip xclip xsel npm)
+    # Add Node.js to sources.list
+    curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+
+    # Add Yarn to sources.list
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+
+    linux_packages=("${COMMON_PACKAGES[@]}" libffi-dev libssl-dev python python-pip xclip xsel npm \
+    apt-transport-https \
+    nodejs \
+    yarn \
+    ca-certificates \
+    curl \
+    gnupg-agent \
+    software-properties-common)
 
     for i in "${linux_packages[@]}"; do
         info "installing $i package"
@@ -67,6 +81,16 @@ function install_packages(){
     esac
 
     command -v diff-so-fancy >/dev/null 2>&1 || {  info "diff-so-fancy";npm install -g diff-so-fancy; }
+}
+
+function install_for_wsl(){
+    windowsUserProfile=/mnt/c/Users/$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')
+
+    # Windows Terminal settings
+    cp ./terminal-settings.json ${windowsUserProfile}/AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
+
+    # Avoid too much RAM consumption
+    cp ./.wslconfig ${windowsUserProfile}/.wslconfig
 }
 
 function install_terminal(){
@@ -150,6 +174,7 @@ install_terminal
 echo "export PAT=$PAT" >>! "$HOME/.env"
 
 [[ $verbose ]] && info "dotfiles installation\n"
+[[ -d "/mnt/c/Users" ]] && install_for_wsl
 
 dotfiles_target="$HOME/.dotfiles"
 git clone --depth=1 https://$PAT@github.com/fazzani/dotfiles "$dotfiles_target" || { git fetch && git reset --hard origin/master && git checkout origin/master; }

@@ -8,7 +8,6 @@ export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$ZSH/custom/plugins/zsh-syntax-highlightin
 # Path to your oh-my-zsh installation.
 export LC_ALL=en_US.UTF-8
 export LSCOLORS=""
-export GPG_TTY=$(tty)
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_DISABLE_COMPFIX=true
 
@@ -90,4 +89,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
