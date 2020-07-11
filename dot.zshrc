@@ -3,13 +3,13 @@ gpgconf --launch gpg-agent
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:/home/ansible/miniconda3/bin:$PATH
-export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$ZSH/custom/plugins/zsh-syntax-highlighting/highlighters
 
 # Path to your oh-my-zsh installation.
 export LC_ALL=en_US.UTF-8
-export LSCOLORS=""
+# export LSCOLORS=""
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_DISABLE_COMPFIX=true
+export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$ZSH/custom/plugins/zsh-syntax-highlighting/highlighters
 
 ZSH_THEME=powerlevel10k/powerlevel10k
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
@@ -89,3 +89,4 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

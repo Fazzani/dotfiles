@@ -35,6 +35,11 @@ function os_linux_install(){
     sudo apt-get update -y && \
     sudo apt-get upgrade -y
 
+    sudo add-apt-repository ppa:jonathonf/vim
+    sudo apt update
+    sudo apt install vim
+
+
     # Add Node.js to sources.list
     curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 
@@ -84,6 +89,7 @@ function install_packages(){
 }
 
 function install_for_wsl(){
+
     windowsUserProfile=/mnt/c/Users/$(cmd.exe /c "echo %USERNAME%" 2>/dev/null | tr -d '\r')
 
     # Windows Terminal settings
