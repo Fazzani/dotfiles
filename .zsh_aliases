@@ -73,3 +73,5 @@ FZF-EOF" --preview-window=right:60%
 
 alias gl="git-commit-show"
 # alias ls='ls --color=auto'
+
+alias wslreboot='history -a && cmd.exe /C wsl --shutdown'
