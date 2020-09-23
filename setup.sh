@@ -69,6 +69,16 @@ function os_linux_install(){
         command -v bat >/dev/null 2>&1 || { wget https://github.com/sharkdp/bat/releases/download/v0.12.1/bat_0.12.1_armhf.deb && sudo dpkg -i bat_0.12.1_armhf.deb && rm bat_0.12.1_armhf.deb; }
         command -v fd >/dev/null 2>&1 || { wget https://github.com/sharkdp/fd/releases/download/v7.4.0/fd_7.4.0_armhf.deb && sudo dpkg -i fd_7.4.0_armhf.deb && rm fd_7.4.0_armhf.deb; }
     }
+
+    # install kubectx and kubens
+    sudo git clone https://github.com/ahmetb/kubectx ~/.kubectx
+    sudo ln -s ~/.kubectx/kubectx /usr/local/bin/kubectx
+    sudo ln -s ~/.kubectx/kubens /usr/local/bin/kubens
+
+    mkdir -p ~/.oh-my-zsh/completions
+    chmod -R 755 ~/.oh-my-zsh/completions
+    ln -s ~/.kubectx/completion/kubectx.zsh ~/.oh-my-zsh/completions/_kubectx.zsh
+    ln -s ~/.kubectx/completion/kubens.zsh ~/.oh-my-zsh/completions/_kubens.zsh
 }
 
 function os_macos_install(){

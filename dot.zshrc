@@ -3,7 +3,7 @@ gpgconf --launch gpg-agent
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:/usr/local/bin:/home/ansible/miniconda3/bin:$PATH
-
+[[ -f "$HOME/.kubectx" ]] && export PATH=$HOME/.kubectx:$PATH
 # Path to your oh-my-zsh installation.
 export LC_ALL=en_US.UTF-8
 # export LSCOLORS=""
@@ -42,6 +42,7 @@ plugins=(
 function install_linux {
   command -v diff-so-fancy &>/dev/null || npm i -g diff-so-fancy;
   dpkg -s fonts-firacode &>/dev/null || sudo apt install fonts-firacode;
+  command -v ansible &>/dev/null || { sudo apt-add-repository ppa:ansible/ansible -y &>/dev/null && sudo apt update -yqq && sudo apt install ansible -y; }
 }
 
 case "$OSTYPE" in
@@ -70,6 +71,7 @@ esac
 [ -f /usr/local/bin/kubectl ] && source <(kubectl completion zsh)
 [ -f "$HOME/.tmux/tmux.completion.bash" ] && source "$HOME/.tmux/tmux.completion.bash"
 [ -f "$HOME/.minikube-completion" ] && source "$HOME/.minikube-completion"
+[ -f "$HOME/.dotfiles/.terraform_aliases" ] && source "$HOME/.dotfiles/.terraform_aliases"
 
 neofetch
 
@@ -90,3 +92,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /usr/bin/terraform terraform
+command -v az &>/dev/null && source /etc/bash_completion.d/azure-cli
