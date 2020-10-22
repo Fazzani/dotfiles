@@ -75,3 +75,4 @@ alias gl="git-commit-show"
 # alias ls='ls --color=auto'
 
 alias wslreboot='history -a && cmd.exe /C wsl --shutdown'
+command -v devenv.exe &>/dev/null && alias vs=devenv.exe
