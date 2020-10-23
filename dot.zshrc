@@ -96,3 +96,10 @@ unset __conda_setup
 autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
 command -v az &>/dev/null && source /etc/bash_completion.d/azure-cli
+
+
+# emulate bash PROMPT_COMMAND (only for zsh)
+precmd() { eval "$PROMPT_COMMAND" }
+# open new terminal in same dir
+PROMPT_COMMAND='pwd > "${HOME}/.cwd"'
+[[ -f "${HOME}/.cwd" ]] && cd "$(< ${HOME}/.cwd)"
