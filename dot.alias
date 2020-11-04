@@ -37,6 +37,7 @@ function kfz() {
 alias kfzr='kubectl api-resources | fzf'
 # switch k8s namespace
 alias kfznss='echo -e "ctrl-s: to switch namespace";kubectl get ns --no-headers | fzf --height 50% -1 --reverse --inline-info --preview "kubectl get po -n {+1}" --bind="ctrl-s:execute(kubectl config set-context --current --namespace={+1})+accept"'
+alias reload='source ~/.zshrc'
 
 # # read dynamicaly k8s ressources and store them into array
 #     while IFS= read -r line; do
