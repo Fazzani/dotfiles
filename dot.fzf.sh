@@ -157,3 +157,7 @@ function gli() {
       --preview-window=right:60% \
       --height 80%
 }
+
+git config --global fetch.prune true
+git config --global alias.prune-branches '!git remote prune origin && git branch -vv | grep '"'"': gone]'"'"' | awk '"'"'{print $1}'"'"' | xargs -r git branch -d'
+git config --global alias.prune-branches-force '!git remote prune origin && git branch -vv | grep '"'"': gone]'"'"' | awk '"'"'{print $1}'"'"' | xargs -r git branch -D'

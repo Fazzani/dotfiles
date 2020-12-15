@@ -53,3 +53,15 @@ alias reload='source ~/.zshrc'
 # complete -F _kfz_completions kfz
 
 # complete -F __start_kubectl kfz
+
+function ippub()
+{
+  wget http://checkip.dyndns.org/ -O - -o /dev/null | cut -d" " -f 6 | cut -d\< -f 1
+}
+function ippriv()
+{
+  echo "eth0: `ifconfig eth0|grep "inet adr"|awk '{print $2}'|awk -F ':' '{print $2}'`"
+  echo "wlan0: `ifconfig wlan0|grep "inet adr"|awk '{print $2}'|awk -F ':' '{print $2}'`"
+}
+
+command -v dotnet-gitversion &> /dev/null && alias gitversion='dotnet-gitversion'

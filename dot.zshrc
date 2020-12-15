@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export GPG_TTY=$(tty)
 gpgconf --launch gpg-agent
 
@@ -10,13 +17,13 @@ export LC_ALL=en_US.UTF-8
 export ZSH=$HOME/.oh-my-zsh
 export ZSH_DISABLE_COMPFIX=true
 export ZSH_HIGHLIGHT_HIGHLIGHTERS_DIR=$ZSH/custom/plugins/zsh-syntax-highlighting/highlighters
+export AZURE_CONFIG_DIR=$HOME/.azure
 
 ZSH_THEME=powerlevel10k/powerlevel10k
 POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true
 [ -f "$HOME/.p10k.zsh" ]  && source "$HOME/.p10k.zsh"
 
 fpath+="$ZSH/plugins/conda-zsh-completion"
-zstyle ':completion::complete:*' use-cache 1
 
 plugins=(
   git
@@ -73,9 +80,7 @@ esac
 [ -f "$HOME/.minikube-completion" ] && source "$HOME/.minikube-completion"
 [ -f "$HOME/.dotfiles/.terraform_aliases" ] && source "$HOME/.dotfiles/.terraform_aliases"
 
-neofetch
-
-# Autoload -U compinit && compinit
+# neofetch
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -91,11 +96,10 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-autoload -U +X bashcompinit && bashcompinit
+# autoload -U +X bashcompinit && bashcompinit
 complete -o nospace -C /usr/bin/terraform terraform
-command -v az &>/dev/null && source /etc/bash_completion.d/azure-cli
+# command -v az &>/dev/null && source /etc/bash_completion.d/azure-cliq
 
 # emulate bash PROMPT_COMMAND (only for zsh)
 precmd() { eval "$PROMPT_COMMAND" }
@@ -109,4 +113,36 @@ if [ $commands[gh] ]; then
   compdump
 fi
 
-# Source github autocomplete
+function activate_systemd_wsl {
+  git clone https://github.com/DamionGans/ubuntu-wsl2-systemd-script.git
+  cd ubuntu-wsl2-systemd-script/
+  bash ubuntu-wsl2-systemd-script.sh
+  cd .. && rm -Rf ubuntu-wsl2-systemd-script
+}
+
+pidof systemd > /dev/null || activate_systemd_wsl
+## Ajout des couleurs pour la complétion
+zmodload -i zsh/complist
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh_cache
+setopt correctall
+
+setopt histignorealldups sharehistory
+# autoload -Uz compinit
+# compinit
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' format 'Completing %d'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' menu select=2
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' menu select=long
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
