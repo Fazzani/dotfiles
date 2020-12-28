@@ -36,12 +36,6 @@ alias ls="command ls ${colorflag}"
 
 # Prevent ZSH from throwing autocorrect for weird-looking Sass commands
 alias sass='nocorrect sass'
-alias gs="git status -s \
- | fzf --no-sort --reverse \
- --preview 'git diff --color=always {+2} | diff-so-fancy' \
- --bind=ctrl-j:preview-down --bind=ctrl-k:preview-up \
- --preview-window=right:60%:wrap"
-
 
 alias cls="clear"
 alias down="cd ~/Downloads"
@@ -58,20 +52,6 @@ alias speedtest="wget -O /dev/null cachefly.cachefly.net/100mb.test"
 
 alias cat="bat --theme=\$(defaults read -globalDomain AppleInterfaceStyle &> /dev/null && echo default || echo GitHub)"
 
-git-commit-show()
-{
-  git log --graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"  | \
-   fzf --ansi --no-sort --reverse --tiebreak=index --preview \
-   'f() { set -- $(echo -- "$@" | grep -o "[a-f0-9]\{7\}"); [ $# -eq 0 ] || git show --color=always $1 ; }; f {}' \
-   --bind "j:down,k:up,alt-j:preview-down,alt-k:preview-up,ctrl-f:preview-page-down,ctrl-b:preview-page-up,q:abort,ctrl-m:execute:
-                (grep -o '[a-f0-9]\{7\}' | head -1 |
-                xargs -I % sh -c 'git show --color=always % | less -R') << 'FZF-EOF'
-                {}
-FZF-EOF" --preview-window=right:60%
-}
-
-
-alias gl="git-commit-show"
 # alias ls='ls --color=auto'
 
 alias wslreboot='history -a && cmd.exe /C wsl --shutdown'
